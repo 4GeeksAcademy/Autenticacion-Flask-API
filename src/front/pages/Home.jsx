@@ -1,52 +1,36 @@
-import React, { useEffect } from "react"
-import rigoImageUrl from "../assets/img/rigo-baby.jpg";
-import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
-
+import React from "react";
+import useGlobalReducer from "../hooks/useGlobalReducer"
 export const Home = () => {
 
-	const { store, dispatch } = useGlobalReducer()
+	const {store, dispatch} = useGlobalReducer();
 
-	const loadMessage = async () => {
-		try {
-			const backendUrl = import.meta.env.VITE_BACKEND_URL
-
-			if (!backendUrl) throw new Error("VITE_BACKEND_URL is not defined in .env file")
-
-			const response = await fetch(backendUrl + "/api/hello")
-			const data = await response.json()
-
-			if (response.ok) dispatch({ type: "set_hello", payload: data.message })
-
-			return data
-
-		} catch (error) {
-			if (error.message) throw new Error(
-				`Could not fetch the message from the backend.
-				Please check if the backend is running and the backend port is public.`
-			);
-		}
-
+	const Login = async () => {
+		const response = await fetch("https://silver-computing-machine-r4rw7vpjrxxxfwxp9-3001.app.github.dev/api/login", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"Authorization": "Bearer " + store.token
+			},
+			body: JSON.stringify({
+				    "email": "alejandromartinezlujan99@gmail.com",
+					"password": "123AML"
+			})
+		})
+		const data = await response.json()
+		console.log(data.token)
+		//Guardar el token en store
+		dispatch({
+			type: "save_token",
+			token: data.token
+		})
+		return
 	}
 
-	useEffect(() => {
-		loadMessage()
-	}, [])
-
 	return (
-		<div className="text-center mt-5">
-			<h1 className="display-4">Hello Rigo!!</h1>
-			<p className="lead">
-				<img src={rigoImageUrl} className="img-fluid rounded-circle mb-3" alt="Rigo Baby" />
-			</p>
-			<div className="alert alert-info">
-				{store.message ? (
-					<span>{store.message}</span>
-				) : (
-					<span className="text-danger">
-						Loading message from the backend (make sure your python 🐍 backend is running)...
-					</span>
-				)}
-			</div>
+		<div>
+			
+			<button onClick={Login}>Login</button>
 		</div>
-	);
-}; 
+	)
+
+}
