@@ -12,17 +12,19 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
-@api.route('/hello', methods=['POST', 'GET'])
-def handle_hello():
+@api.route('/singup', methods=['POST'])
+def singup():
 
-    response_body = {
-        "message": "Hola Alejandro"
-    }
+    body = request.get_json()
 
-    return jsonify(response_body), 200
+    new_user = User(email=body['email'], password=body['password'])
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({'msg': 'Usuario creado con éxito'}), 201
 
 @api.route('/login', methods= ['POST'])
-def handle_login():
+def login():
     data = request.json
     email = data.get('email')
     password = data.get('password')
@@ -38,11 +40,9 @@ def handle_login():
     token = create_access_token(identity=user.email)
     return jsonify({"token": token})
 
-@api.route('/payment', methods= ['POST'])
+@api.route('/private', methods= ['GET'])
 @jwt_required()
 def pago():
-    data = request.json
-    amount = data.get('amount')
     current_user = get_jwt_identity()
 
     return jsonify({"ok": current_user})

@@ -5,15 +5,15 @@ export const Home = () => {
 	const {store, dispatch} = useGlobalReducer();
 
 	const Login = async () => {
-		const response = await fetch("https://silver-computing-machine-r4rw7vpjrxxxfwxp9-3001.app.github.dev/api/login", {
+		const response = await fetch("https://obscure-tribble-5g45vpxw477r2vpg6-3001.app.github.dev/api/login", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
-				"Authorization": "Bearer " + store.token
+				//"Authorization": "Bearer " + store.token
 			},
 			body: JSON.stringify({
-				    "email": "alejandromartinezlujan99@gmail.com",
-					"password": "123AML"
+				    "email": "alex@alex.com",
+					"password": "1234"
 			})
 		})
 		const data = await response.json()

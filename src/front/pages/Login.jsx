@@ -1,8 +1,8 @@
-// Login.jsx
-
 import React, { useState } from 'react';
+import useGlobalReducer from '../hooks/useGlobalReducer';
 
 const Login = () => {
+  const {dispatch} = useGlobalReducer();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -18,10 +18,21 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const BackendURL = 'https://obscure-tribble-5g45vpxw477r2vpg6-3001.app.github.dev/api/login'
+    fetch(BackendURL, {
+      method: 'POST',
+      headers: { "Content-Type": "application/json",},
+      body: JSON.stringify(formData)
+    })
+    .then(data => {
+      dispatch({
+        type: 'save_token',
+        token: data.token
+      })
     // Aquí agregarías la lógica para manejar el inicio de sesión
     console.log('Formulario de login enviado:', formData);
+    })
   };
-
   return (
     <div className="container mt-5 d-flex justify-content-center">
       <div className="card shadow-lg p-4" style={{ width: '400px' }}>

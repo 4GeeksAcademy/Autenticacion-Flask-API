@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import useGlobalReducer from '../hooks/useGlobalReducer';
 
 const Signup = () => {
+  const {dispatch} = useGlobalReducer();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -16,7 +18,16 @@ const Signup = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Aquí agregarías la lógica para enviar los datos a tu API
+    const BackendURL = 'https://obscure-tribble-5g45vpxw477r2vpg6-3001.app.github.dev/api/singup'
+    fetch(BackendURL, {
+      method: 'POST',
+      headers: { "Content-Type": "application/json",},
+      body: JSON.stringify(formData)
+    })
+    dispatch({
+      type: 'save_user',
+      user: {email:formData.email}
+    })
     console.log('Formulario enviado:', formData);
   };
 
